@@ -1,0 +1,23 @@
+{
+    "name": "cmpweb",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.js",
+    "dependencies": {
+        "casparcg-connection": "^5.1.0",
+        "cors": "^2.8.5",
+        "directory-tree": "^2.2.6",
+        "express": "^4.17.1",
+        "font-list": "^1.3.1",
+        "nodemon": "^2.0.15",
+        "serve-static": "^1.14.1",
+        "socket.io": "^3.0.5",
+        "tslib": "^2.3.1"
+    },
+    "scripts": {
+        "start": "nodemon main"
+    },
+    "author": "vimlesh kumar",
+    "email": "vimlesh1975@hotmail.com",
+    "license": "ISC"
+}
