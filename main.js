@@ -273,7 +273,7 @@ app.post('/loadHtml', (req, res) => {
         if (error) {
             console.log(error);
         }
-        io.emit('loadHtml', { html: html, data: req.body.data })
+        io.emit('loadHtml', { html: html, data: req.body.data, clientId: req.body.clientId })
         res.end('');
     });
 })
@@ -282,3 +282,9 @@ app.post('/callScript', (req, res) => {
     io.emit('callScript', req.body)
     res.end(JSON.stringify(req.body))
 })
+
+app.post('/executeScript', (req, res) => {
+    io.emit('executeScript', req.body)
+    res.end('')
+})
+
