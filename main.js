@@ -54,6 +54,7 @@ app.post('/openai', async (req, res) => {
         const prompt = req.body.prompt;
         const model = req.body.model;
 
+        // const response = await openai.createCompletion({
         const response = await openai.createCompletion({
             model: model,
             prompt: `${prompt}`,
@@ -62,17 +63,44 @@ app.post('/openai', async (req, res) => {
             top_p: 1, // alternative to sampling with temperature, called nucleus sampling
             frequency_penalty: 0.5, // Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
             presence_penalty: 0, // Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
+            // return_state:true
         });
+        // console.log(JSON.stringify(response.data.choices))
 
         res.status(200).send({
             bot: response.data.choices[0].text
         });
 
     } catch (error) {
-        // console.error(error)
-        res.status(500).send(error || 'Something went wrong');
+        // console.log(JSON.stringify(error.message))
+        res.status(500).send(error.message || 'Something went wrong');
+
     }
 })
+
+
+app.post('/openaiimage', async (req, res) => {
+    // console.log(req)
+    try {
+        const prompt = req.body.prompt;
+        const response = await openai.createImage({
+            prompt: `${prompt}`,
+            n: 1,
+            size: '256x256',
+        });
+        // console.log(response['data'].data[0].url)
+
+        res.status(200).send({
+            bot: response['data'].data[0].url
+        });
+
+    } catch (error) {
+        // console.log(JSON.stringify(error.message))
+        res.status(500).send(error.message || 'Something went wrong');
+
+    }
+})
+
 app.post('/openai/models', async (req, res) => {
     try {
         const response = await openai.listEngines();
@@ -163,7 +191,7 @@ app.post('/getmedia', (req, res) => {
 })
 
 app.post('/endpoint', (req, res) => {
-    console.log(req.headers.referer);
+    // console.log(req.headers.referer);
     aa.do(new AMCP.CustomCommand(req.body.string)).then((aa1) => {
         // console.log(aa1.response.raw);
     }).catch((aa2) => {
