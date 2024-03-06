@@ -42,9 +42,47 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 
-//open Ai Starts --------------------------------------------------------------------------
 const dotenv = require("dotenv");
 dotenv.config();
+
+//iconfinderApiKey Starts ----
+
+
+const iconfinderApiKey=process.env.REACT_APP_ICONFINDER_API_KEY;
+
+app.get('/api/iconfinder', async (req, res) => {
+    try {
+        const response = await axios.get('https://api.iconfinder.com/v4/icons/search', {
+            headers: {
+                Authorization: `Bearer ${iconfinderApiKey}`,
+            },
+            params: req.query,
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching data from Iconfinder API:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/api/iconfinder/getSvg', async (req, res) => {
+    try {
+      const response = await axios.get(req.body.svgUrl, {
+        headers: {
+          Authorization: `Bearer ${iconfinderApiKey}`,
+        },
+      });
+      res.send(response.data);
+    } catch (error) {
+      console.error('Error fetching data from Iconfinder API:', error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+//iconfinderApiKey ends ----
+
+
+//open Ai Starts --------------------------------------------------------------------------
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -184,13 +222,15 @@ aa.onConnectionChanged = () => {
 };
 
 var mediaPath = "c:/casparcg/_media";
-var templatePath;
+var templatePath = 'c:/casparcg';
 var logPath;
 
 // const PATH = require('path');
 
 const dirTree = require("directory-tree");
 var media = [];
+var template = [];
+
 
 const refreshMedia = () => {
   aa.getCasparCGPaths()
@@ -209,6 +249,25 @@ const refreshMedia = () => {
     })
     .catch((aa2) => console.log(aa2));
 };
+
+const refreshTemplate = () => {
+  aa.getCasparCGPaths()
+    .then((aa1) => {
+      templatePath = aa1.absoluteTemplate;
+      template = [];
+      var tree = dirTree(templatePath, {}, (item, PATH, stats) => {
+
+        var aa = item.path.substring(templatePath.length);
+        if (aa.endsWith(".html")) {
+          template.push(aa);
+        }
+        // template.push(aa);
+      });
+      console.log(template.length);
+    })
+    .catch((aa2) => console.log(aa2));
+};
+
 aa.onConnected = () => {
   refreshMedia();
   aa.getCasparCGVersion()
@@ -241,6 +300,16 @@ app.post("/getmedia", (req, res) => {
     res.end();
   }, 2000);
 });
+
+app.post('/gettemplate', (req, res) => {
+  refreshTemplate();
+  setTimeout(() => {
+    res.send(template);
+    res.end();
+  }, 2000);
+});
+
+
 
 app.post("/endpoint", (req, res) => {
   // console.log(req.headers.referer);
@@ -443,4 +512,15 @@ app.post("/callScript", (req, res) => {
 app.post("/executeScript", (req, res) => {
   io.emit("executeScript", req.body);
   res.end("");
+});
+
+app.post('/readfile', (req, res) => {
+  fs.readFile(templatePath + req.body.filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(`Error reading file: ${err}`);
+      return;
+    }
+    res.send(data);
+    res.end();
+  });
 });
