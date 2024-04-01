@@ -550,3 +550,26 @@ app.post('/readfile', (req, res) => {
     res.end();
   });
 });
+
+
+
+// rss feed code  starts
+app.post('/fetch-proxy', async (req, res) => {
+  const url = req.body.url;
+
+  if (!url) {
+    return res.status(400).json({ error: 'URL parameter is missing' });
+  }
+
+  try {
+    const response = await fetch(url);
+    const data = await response.text();
+    res.send(data);
+  } catch (error) {
+    console.error('Error fetching URL:', error);
+    res.status(500).send('Error fetching URL');
+  }
+});
+
+
+// rss feed code  ends
