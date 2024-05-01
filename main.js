@@ -383,11 +383,12 @@ const ccgsocket = new CasparCGSocket("localhost", 5250);
 
 global.app = app;
 
-io.on("connection", (socket) => {
-  console.log("New Web Socket client connected");
-  socket.emit("connectionStatus", aa.connected.toString());
-  socket.on("disconnect", () => {
-    console.log("client disconnected");
+io.on('connection', (socket) => {
+  const remoteAddress = socket.handshake.address;
+  console.log('New Web Socket client connected ' + remoteAddress);
+  socket.emit('connectionStatus', aa.connected.toString());
+  socket.on('disconnect', () => {
+    console.log(remoteAddress + ' client disconnected');
   });
 });
 
