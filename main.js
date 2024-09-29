@@ -52,6 +52,47 @@ dotenv.config();
 
 const iconfinderApiKey=process.env.REACT_APP_ICONFINDER_API_KEY;
 const unsplashAccessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+const removebgapikey = process.env.REACT_APP_REMOVEBG_API_KEY;
+
+// Proxy route to interact with remove.bg API
+app.post("/api/remove-bg", async (req, res) => {
+  const { base64Image } = req.body;
+
+  try {
+    // Send request to remove.bg API with base64 image data
+    const response = await axios.post(
+      "https://api.remove.bg/v1.0/removebg",
+      {
+        image_file_b64: base64Image.replace(
+          /^data:image\/(png|jpg|jpeg);base64,/,
+          ""
+        ),
+        size: "auto",
+      },
+      {
+        headers: {
+          "X-Api-Key": removebgapikey,
+        },
+        responseType: "arraybuffer", // Ensure response is a buffer to handle binary data
+      }
+    );
+
+    // Convert the buffer to base64 so that we can send it back to the frontend
+    const base64Data = `data:image/png;base64,${Buffer.from(
+      response.data,
+      "binary"
+    ).toString("base64")}`;
+
+    // Send back the image data in base64 format
+    res.status(200).json({ imageData: base64Data });
+  } catch (error) {
+    console.error(
+      "Error in remove.bg API call:",
+      error.response ? error.response.data : error.message
+    );
+    res.status(500).json({ message: "Failed to remove background." });
+  }
+});
 
 
 app.get('/api/iconfinder', async (req, res) => {
