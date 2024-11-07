@@ -281,7 +281,7 @@ const http = require("http").Server(app);
 http.listen(port, () => {
   console.log(`node Server is liestemnig on ${port}`);
 });
-server2.timeout = 300000;  // 5 minutes, adjust as necessary
+http.timeout = 300000;  // 5 minutes, adjust as necessary
 var aa = new CasparCG("127.0.0.1", 5250);
 aa.queueMode = Options.QueueMode.SEQUENTIAL;
 aa.onConnectionChanged = () => {
