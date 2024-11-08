@@ -6,10 +6,14 @@ const https = require("https");
 const axios = require('axios');
 
 const corsOptions = {
-  // "Access-Control-Allow-Origin": "*",
+  origin: "https://vimlesh1975.github.io", // Specify the origin you want to allow
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.use(cors());
+// Apply the CORS middleware with the options
+app.use(cors(corsOptions));
+
 var serveStatic = require("serve-static");
 app.use("/media", serveStatic("c:\\casparcg\\_media"));
 
