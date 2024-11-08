@@ -9,9 +9,6 @@ const corsOptions = {
   // "Access-Control-Allow-Origin": "*",
 };
 
-const mos1 = require("./mos1.js");
-const nms1 = require("./nms.js");
-
 app.use(cors());
 var serveStatic = require("serve-static");
 app.use("/media", serveStatic("c:\\casparcg\\_media"));
@@ -291,7 +288,7 @@ aa.onConnectionChanged = () => {
 
 var mediaPath = "c:/casparcg/_media";
 var templatePath = 'c:/casparcg';
-var logPath;
+// var logPath;
 
 // const PATH = require('path');
 
