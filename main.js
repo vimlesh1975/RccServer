@@ -6,7 +6,7 @@ const https = require("https");
 const axios = require('axios');
 
 const corsOptions = {
-  origin: "https://vimlesh1975.github.io", // Specify the origin you want to allow
+  origin: "*", // Specify the origin you want to allow
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
