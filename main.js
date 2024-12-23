@@ -648,7 +648,7 @@ async function safeQuery(query, params = []) {
 }
 
 app.get("/getNewsID", async (req, res) => {
-  const query = newdatabase ? `SELECT distinct bulletinname as title FROM bulletin where bulletinname != '' and bulletintype !='Pool' order by bulletinname asc` : `SELECT distinct title FROM newsid where title != '' order by title asc`
+  const query = newdatabase ? `SELECT distinct bulletinname as title FROM bulletin where bulletinname != '' and bulletintype ='News Bulletin'  order by bulletinname asc` : `SELECT distinct title FROM newsid where title != '' order by title asc`
   try {
     const [rows] = await safeQuery(
       query
