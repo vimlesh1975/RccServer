@@ -405,24 +405,6 @@ app.post("/getPaths", (req, res) => {
 const io = require("socket.io")(http, options);
 const ccgsocket = new CasparCGSocket("localhost", 5250);
 
-// udpPort.on("message", function (oscMessage, info) {
-
-//     if (oscMessage.address === '/channel/1/stage/layer/1/file/time') {
-//         ccgsocket.emit('Fromccgsocket', oscMessage.args[0].value);
-//         io.emit("FromAPI", oscMessage.args[0].value);
-//     }
-//     else if (oscMessage.address === '/channel/1/stage/layer/1/foreground/file/time') {
-//         ccgsocket.emit('Fromccgsocket', oscMessage.args[0].value);
-//         io.emit("FromAPI", oscMessage.args[0].value);
-//     }
-// });
-// var osc = require('osc')
-// var udpPort = new osc.UDPPort({
-//     localAddress: "127.0.0.1",
-//     localPort: 6250,
-//     metadata: true
-// });
-// udpPort.open();
 
 global.app = app;
 
@@ -432,6 +414,9 @@ io.on('connection', (socket) => {
   socket.emit('connectionStatus', aa.connected.toString());
   socket.on('disconnect', () => {
     console.log(remoteAddress + ' client disconnected');
+  });
+    socket.on("DataFromCanvas", (data) => {
+    io.emit("DataFromCanvas2", data);
   });
 });
 
