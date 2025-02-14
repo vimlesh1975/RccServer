@@ -418,6 +418,9 @@ io.on('connection', (socket) => {
     socket.on("DataFromCanvas", (data) => {
     io.emit("DataFromCanvas2", data);
   });
+    socket.on("Iamready", (data) => {
+    io.emit("Iamready2", data);
+  });
 });
 
 const path = require("path");
