@@ -794,7 +794,9 @@ app.post("/insertGraphics", async (req, res) => {
 });
 
 app.post("/updateCGEntry", async (req, res) => {
-  const { cgValue, ScriptID, NewsId } = req.body;
+  const { cgValue, ScriptID, NewsId, selectedDate } = req.body;
+  const emitteddata={cgValue, ScriptID, NewsId, selectedDate};
+  io.emit("updateCGEntry", emitteddata);
   const values = [
     cgValue,
     ScriptID,
