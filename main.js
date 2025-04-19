@@ -417,7 +417,13 @@ app.post("/getPaths", (req, res) => {
   res.send(mediaPath);
 });
 
-const io = require("socket.io")(http, corsOptions);
+const io = require("socket.io")(http, {
+  cors: {
+    origin: ["https://vimlesh1975.github.io"],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 const ccgsocket = new CasparCGSocket("localhost", 5250);
 
 
