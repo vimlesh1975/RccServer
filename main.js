@@ -5,10 +5,25 @@ const cors = require("cors");
 const https = require("https");
 const axios = require('axios');
 
+
+const allowedOrigins = [
+  "https://vimlesh1975.github.io",
+  "https://localhost:10000", // Add more as needed
+  "*"
+];
+
 const corsOptions = {
-  origin: "*", // Specify the origin you want to allow
+   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+   credentials: true,
 };
 
 // Apply the CORS middleware with the options
@@ -402,7 +417,7 @@ app.post("/getPaths", (req, res) => {
   res.send(mediaPath);
 });
 
-const io = require("socket.io")(http, options);
+const io = require("socket.io")(http, corsOptions);
 const ccgsocket = new CasparCGSocket("localhost", 5250);
 
 
