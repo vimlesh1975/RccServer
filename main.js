@@ -961,3 +961,75 @@ app.post('/speak', async (req, res) => {
 
 // TTS code end here
 
+//code start  for google translation
+
+const { TranslationServiceClient } = require('@google-cloud/translate');
+const credentialsforgooglecloud = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+
+const client = new TranslationServiceClient({
+  credentials: credentialsforgooglecloud,
+});
+
+function splitTextForTranslation(text, maxChars = 25000) {
+  const chunks = [];
+  let currentChunk = '';
+
+  const sentenceDelimiterRegex = /(?<=[.?!।|۔])\s*/g;
+  const sentences = text.split(sentenceDelimiterRegex);
+
+  sentences.forEach((sentence) => {
+    if ((currentChunk + sentence).length > maxChars) {
+      chunks.push(currentChunk.trim());
+      currentChunk = sentence;
+    } else {
+      currentChunk += sentence + ' ';
+    }
+  });
+
+  if (currentChunk.trim()) {
+    chunks.push(currentChunk.trim());
+  }
+
+  return chunks;
+}
+
+app.post('/translate', async (req, res) => {
+  const { text, targetLanguage } = req.body;
+
+  if (!text || !targetLanguage) {
+    return res.status(400).json({ error: 'Text and target language are required.' });
+  }
+
+  try {
+    const projectId = credentialsforgooglecloud.project_id;
+    const location = 'global';
+    const parent = `projects/${projectId}/locations/${location}`;
+
+    const textChunks = splitTextForTranslation(text, 30000);
+
+    const translatedChunks = await Promise.all(
+      textChunks.map(async (chunk) => {
+        const [response] = await client.translateText({
+          contents: [chunk],
+          targetLanguageCode: targetLanguage,
+          parent,
+        });
+        return response.translations[0].translatedText;
+      })
+    );
+
+    const translatedText = translatedChunks.join(' ');
+
+    res.json({ translatedText });
+  } catch (error) {
+    console.error('Translation API error:', error);
+    res.status(500).json({ error: 'Failed to translate text.' });
+  }
+});
+
+//end code for google translation
+
+
+
+
+
