@@ -473,6 +473,7 @@ io.on('connection', (socket) => {
   const remoteAddress = socket.handshake.address;
   console.log('New Web Socket client connected ' + remoteAddress);
   socket.emit('connectionStatus', aa.connected.toString());
+  socket.emit("databaseConnection", databaseConnection);
   socket.on('disconnect', () => {
     console.log(remoteAddress + ' client disconnected');
   });
