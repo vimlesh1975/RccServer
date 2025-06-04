@@ -1114,29 +1114,29 @@ app.get('/getlocalip', (req, res) => {
   res.json({ ip });
 });
 
-const shuttle = require('shuttle-control-usb');
+// const shuttle = require('shuttle-control-usb');
 
-shuttle.on('connected', (deviceInfo) => {
-  console.log('Connected to ' + deviceInfo.name);
-});
+// shuttle.on('connected', (deviceInfo) => {
+//   console.log('Connected to ' + deviceInfo.name);
+// });
 
-shuttle.on('buttondown', data => {
-  io.emit('buttondown1', data);
-});
+// shuttle.on('buttondown', data => {
+//   io.emit('buttondown1', data);
+// });
 
-shuttle.on('disconnected', data => {
-  console.log(data);
-});
+// shuttle.on('disconnected', data => {
+//   console.log(data);
+// });
 
-shuttle.on('shuttle', data => {
-  io.emit('shuttle1', data);
-});
+// shuttle.on('shuttle', data => {
+//   io.emit('shuttle1', data);
+// });
 
-shuttle.on('jog-dir', (data1) => {
-  io.emit('jog-dir1', data1);
-});
+// shuttle.on('jog-dir', (data1) => {
+//   io.emit('jog-dir1', data1);
+// });
 
-shuttle.start();
+// shuttle.start();
 
 
 io.on('connection', (socket) => {
